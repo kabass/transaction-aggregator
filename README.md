@@ -90,6 +90,7 @@ The job can be scheduled using OOZIE tool in hadoop platform. The task will be t
 
 
 ### Performance Test Result
+Les données de test de performance sont générées de manière aléatoire avec la classe **src/test/com.carrefour.phenix.DataGenerator**
 #### Input
 The application take 20 minutes to run with the following input :
  - 1200 stores : 
