@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.carrefour.phenix</groupId>
+    <artifactId>transaction-aggregator</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>${project.artifactId}</name>
+    <description>My wonderfull scala app</description>
+    <inceptionYear>2015</inceptionYear>
+    <licenses>
+        <license>
+            <name>My License</name>
+            <url>http://....</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <encoding>UTF-8</encoding>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <scala.version>2.11.8</scala.version>
+        <spark.version>2.3.0</spark.version>
+        <scala.compat.version>2.11</scala.compat.version>  <!--Maven-->
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.appassembler.plugin.version>1.10</maven.appassembler.plugin.version>
+        <maven.scoverage.plugin.version>1.3.0</maven.scoverage.plugin.version>
+        <maven.jar.plugin.version>3.1.0</maven.jar.plugin.version>
+        <maven.compiler.plugin>3.5.1</maven.compiler.plugin>
+        <maven.surefire.plugin>2.19.1</maven.surefire.plugin>
+        <maven.assembly.plugin>3.1.0</maven.assembly.plugin>
+        <maven.release.plugin>2.5.3</maven.release.plugin>
+        <maven.scala.plugin>3.2.1</maven.scala.plugin>
+        <maven.shade.plugin>3.1.0</maven.shade.plugin>
+        <maven.dependency.plugin>3.0.2</maven.dependency.plugin>
+        <maven.resources.plugin>3.0.2</maven.resources.plugin>
+        <maven.scalatest.plugin>1.0</maven.scalatest.plugin>
+        <maven.scalastyle.plugin>0.8.0</maven.scalastyle.plugin>
+        <maven.build-helper.plugin>3.0.0</maven.build-helper.plugin>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.72</version>
+        </dependency>
+        <dependency>
+            <groupId>au.com.bytecode</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>2.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.compat.version}</artifactId>
+            <version>3.0.7</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+    <build>
+
+        <sourceDirectory>src/main/scala</sourceDirectory>
+
+            <testResources>
+                <testResource>
+                    <directory>src/it/resources</directory>
+                </testResource>
+                <testResource>
+                    <directory>src/test/resources</directory>
+                </testResource>
+            </testResources>
+<plugins>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>${maven.build-helper.plugin}</version>
+            <executions>
+                <execution>
+                    <id>add-test-source</id>
+                    <phase>generate-test-sources</phase>
+                    <goals>
+                        <goal>add-test-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>src/test/scala</source>
+                            <source>src/it/scala</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+    <plugin>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest-maven-plugin</artifactId>
+        <version>${maven.scalatest.plugin}</version>
+        <executions>
+            <execution>
+                <id>IntegrationTest</id>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <phase>integration-test</phase>
+                <configuration>
+                    <argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                </configuration>
+            </execution>
+            <execution>
+                <id>UnitTest</id>
+                <goals>
+                    <goal>test</goal>
+                </goals>
+                <phase>test</phase>
+                <configuration>
+                    <argLine>-Dfile.encoding=${project.build.sourceEncoding}</argLine>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
+    <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>${maven.scala.plugin}</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>compile</goal>
+                    <goal>testCompile</goal>
+                </goals>
+                <configuration>
+                    <args>
+                        <arg>-dependencyfile</arg>
+                        <arg>${project.build.directory}/.scala_dependencies</arg>
+                    </args>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+    <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin}</version>
+        <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+            <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+    </plugin>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.1</version>
+        <executions>
+            <!-- Run shade goal on package phase -->
+            <execution>
+                <phase>package</phase>
+                <goals>
+                    <goal>shade</goal>
+                </goals>
+                <configuration>
+                    <transformers>
+                        <!-- add Main-Class to manifest file -->
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>com.renault.datalake.sample.Main</mainClass>
+                        </transformer>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.Codec</resource>
+                        </transformer>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.DocValuesFormat</resource>
+                        </transformer>
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.PostingsFormat</resource>
+                        </transformer>
+                    </transformers>
+                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedClassifierName>with-dependencies</shadedClassifierName>
+                    <finalName>${project.artifactId}-with-dependencies</finalName>
+                    <!--<shadedClassifierName>uber</shadedClassifierName>-->
+                    <!--<shadedArtifactAttached>false</shadedArtifactAttached>-->
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                    <!-- Additional configuration. -->
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
+    <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+            <execution>
+                <id>deploy-prd</id>
+                <phase>package</phase>
+                <goals>
+                    <goal>single</goal>
+                </goals>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/assembly/descriptor.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </execution>
+        </executions>
+    </plugin>
+
+
+    <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven.dependency.plugin}</version>
+    </plugin>
+
+</plugins>
+    </build>
+
+</project>
