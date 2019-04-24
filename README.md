@@ -101,4 +101,4 @@ The application take 20 minutes to run with the following input :
   --conf spark.executor.memory=512m \
   --conf spark.driver.memory=512m \
   --conf spark.executor.cores=2 \
- # transaction-aggregator
+
